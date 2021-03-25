@@ -22,8 +22,8 @@ import (
 
 // BaseObject defines model for baseObject.
 type BaseObject struct {
-	Foo     *string `json:"foo,omitempty"`
-	ObjType string  `json:"objType"`
+	DollarSign string  `json:"$"`
+	Foo        *string `json:"foo,omitempty"`
 }
 
 // ChildObject defines model for childObject.
@@ -350,12 +350,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/3xSPU/DMBD9Lw9GKwmweWRBLHRhqzo49qV1ldjGPpCqyv8d2ekXammG2Jd7uvdx2UP7",
-	"KXhHjhPkHklvaFL12qtEi35LmksVog8U2VLtDd6Xg3eBIJE4WrdGFvD99rN+u+plgUhf3zaSgVyegCtx",
-	"BPqZKgvojR3Nf8y9irenX40pdJT4PEiN42KAXO7xGGmAxEN7Nt8enLcXtrO4D70UmlcCxiYd7WSdYh8v",
-	"pO8+1HTQVk3nXARbN8whWh5LlylxTwYCPxST9Q4SXdM1TzXYQE4FC4mXpms6CATFm5pIW15rqhYLnWLr",
-	"3buBxBsxTjm8erMrEO0dk5sDCWG0uuLbbSqExx+g3O45/5tttWOomA88Cy/VvIQUvEvz7p67rhy3kPX5",
-	"DQAA//8TR8ySjQIAAA==",
+	"H4sIAAAAAAAC/3yRsW7jMBBE/2VOJSHp7jqW1xzSxB9guKDElU1DIhlyE8Aw+O/BUnHsII5VUOJqsDtv",
+	"9owxLDF48pyhz8jjgRZTPweTaTMcaWS5xRQiJXZU/zVy8CkSNDIn5/coClMId+pFIdHLq0tkobdosFMX",
+	"SVjbF4Xx4Gb707TBpPt9v7WRQZT52sjM82aC3p7RJJqg8au7AncftN0NalGPpbdGy07BujwmtzhvOKQb",
+	"66dns4i3BqWIVeenNRzHs9SZMg9kofBGKbvgodG3fftbMEIkb6KDxt+2b3soRMOHmkUnx54qnAwy7IJ/",
+	"stD4T4zPBP4FexLJGDyTX6OIcXZj1XfHLAMv664bfcD8NdWKY0mwI6/G5bbGn2Pwed3an76X1z1lfd4D",
+	"AAD//wc/Asx7AgAA",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
@@ -381,4 +381,3 @@ func GetSwagger() (*openapi3.Swagger, error) {
 	}
 	return swagger, nil
 }
-

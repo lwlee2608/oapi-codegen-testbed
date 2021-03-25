@@ -20,8 +20,8 @@ func main() {
 
 	requestBody := Spec.GetJSONRequestBody{
 		BaseObject: Spec.BaseObject{
-			Foo:     String("fooValue"),
-			ObjType: "BarOject",
+			Foo:        String("fooValue"),
+			DollarSign: "ObjectType",
 		},
 		ChildObject: Spec.ChildObject{
 			Bar: String("barValue"),

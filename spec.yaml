@@ -4,7 +4,7 @@ info:
   version: 0.0.1
 paths:
   /:
-    get:
+    post:
       requestBody:
         description: desc
         content:
@@ -21,13 +21,13 @@ components:
         - $ref: '#/components/schemas/baseObject'
         - $ref: '#/components/schemas/childObject'
       discriminator:
-        propertyName: objType
+        propertyName: $
     baseObject:
       type: object
       required:
-        - objType
+        - $ 
       properties:
-        objType:
+        $:
           type: string
         foo:
           type: string
