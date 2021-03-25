@@ -39,11 +39,11 @@ type RequestObject struct {
 	ChildObject `yaml:",inline"`
 }
 
-// GetJSONBody defines parameters for Get.
-type GetJSONBody RequestObject
+// PostJSONBody defines parameters for Post.
+type PostJSONBody RequestObject
 
-// GetJSONRequestBody defines body for Get for application/json ContentType.
-type GetJSONRequestBody GetJSONBody
+// PostJSONRequestBody defines body for Post for application/json ContentType.
+type PostJSONRequestBody PostJSONBody
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -118,14 +118,14 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
-	// Get request  with any body
-	GetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// Post request  with any body
+	PostWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	Get(ctx context.Context, body GetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+	Post(ctx context.Context, body PostJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) GetWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetRequestWithBody(c.Server, contentType, body)
+func (c *Client) PostWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -136,8 +136,8 @@ func (c *Client) GetWithBody(ctx context.Context, contentType string, body io.Re
 	return c.Client.Do(req)
 }
 
-func (c *Client) Get(ctx context.Context, body GetJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetRequest(c.Server, body)
+func (c *Client) Post(ctx context.Context, body PostJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -148,19 +148,19 @@ func (c *Client) Get(ctx context.Context, body GetJSONRequestBody, reqEditors ..
 	return c.Client.Do(req)
 }
 
-// NewGetRequest calls the generic Get builder with application/json body
-func NewGetRequest(server string, body GetJSONRequestBody) (*http.Request, error) {
+// NewPostRequest calls the generic Post builder with application/json body
+func NewPostRequest(server string, body PostJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	bodyReader = bytes.NewReader(buf)
-	return NewGetRequestWithBody(server, "application/json", bodyReader)
+	return NewPostRequestWithBody(server, "application/json", bodyReader)
 }
 
-// NewGetRequestWithBody generates requests for Get with any type of body
-func NewGetRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+// NewPostRequestWithBody generates requests for Post with any type of body
+func NewPostRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
 	var err error
 
 	serverURL, err := url.Parse(server)
@@ -178,7 +178,7 @@ func NewGetRequestWithBody(server string, contentType string, body io.Reader) (*
 
 	queryURL := serverURL.ResolveReference(&operationURL)
 
-	req, err := http.NewRequest("GET", queryURL.String(), body)
+	req, err := http.NewRequest("POST", queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -231,19 +231,19 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
-	// Get request  with any body
-	GetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetResponse, error)
+	// Post request  with any body
+	PostWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostResponse, error)
 
-	GetWithResponse(ctx context.Context, body GetJSONRequestBody, reqEditors ...RequestEditorFn) (*GetResponse, error)
+	PostWithResponse(ctx context.Context, body PostJSONRequestBody, reqEditors ...RequestEditorFn) (*PostResponse, error)
 }
 
-type GetResponse struct {
+type PostResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r GetResponse) Status() string {
+func (r PostResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -251,39 +251,39 @@ func (r GetResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r GetResponse) StatusCode() int {
+func (r PostResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
 	return 0
 }
 
-// GetWithBodyWithResponse request with arbitrary body returning *GetResponse
-func (c *ClientWithResponses) GetWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*GetResponse, error) {
-	rsp, err := c.GetWithBody(ctx, contentType, body, reqEditors...)
+// PostWithBodyWithResponse request with arbitrary body returning *PostResponse
+func (c *ClientWithResponses) PostWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostResponse, error) {
+	rsp, err := c.PostWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetResponse(rsp)
+	return ParsePostResponse(rsp)
 }
 
-func (c *ClientWithResponses) GetWithResponse(ctx context.Context, body GetJSONRequestBody, reqEditors ...RequestEditorFn) (*GetResponse, error) {
-	rsp, err := c.Get(ctx, body, reqEditors...)
+func (c *ClientWithResponses) PostWithResponse(ctx context.Context, body PostJSONRequestBody, reqEditors ...RequestEditorFn) (*PostResponse, error) {
+	rsp, err := c.Post(ctx, body, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseGetResponse(rsp)
+	return ParsePostResponse(rsp)
 }
 
-// ParseGetResponse parses an HTTP response from a GetWithResponse call
-func ParseGetResponse(rsp *http.Response) (*GetResponse, error) {
+// ParsePostResponse parses an HTTP response from a PostWithResponse call
+func ParsePostResponse(rsp *http.Response) (*PostResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
 	defer rsp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &GetResponse{
+	response := &PostResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -297,8 +297,8 @@ func ParseGetResponse(rsp *http.Response) (*GetResponse, error) {
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (GET /)
-	Get(ctx echo.Context) error
+	// (POST /)
+	Post(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -306,12 +306,12 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// Get converts echo context to params.
-func (w *ServerInterfaceWrapper) Get(ctx echo.Context) error {
+// Post converts echo context to params.
+func (w *ServerInterfaceWrapper) Post(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.Get(ctx)
+	err = w.Handler.Post(ctx)
 	return err
 }
 
@@ -343,19 +343,19 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.GET(baseURL+"/", wrapper.Get)
+	router.POST(baseURL+"/", wrapper.Post)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/3yRsW7jMBBE/2VOJSHp7jqW1xzSxB9guKDElU1DIhlyE8Aw+O/BUnHsII5VUOJqsDtv",
-	"9owxLDF48pyhz8jjgRZTPweTaTMcaWS5xRQiJXZU/zVy8CkSNDIn5/coClMId+pFIdHLq0tkobdosFMX",
-	"SVjbF4Xx4Gb707TBpPt9v7WRQZT52sjM82aC3p7RJJqg8au7AncftN0NalGPpbdGy07BujwmtzhvOKQb",
-	"66dns4i3BqWIVeenNRzHs9SZMg9kofBGKbvgodG3fftbMEIkb6KDxt+2b3soRMOHmkUnx54qnAwy7IJ/",
-	"stD4T4zPBP4FexLJGDyTX6OIcXZj1XfHLAMv664bfcD8NdWKY0mwI6/G5bbGn2Pwed3an76X1z1lfd4D",
-	"AAD//wc/Asx7AgAA",
+	"H4sIAAAAAAAC/3yRQW+jMBCF/8tbjhawuzcfe+ul6T3KwcDQOAKPa08rRRH/vRrTNKmahgPgYZj3vjcn",
+	"9DxHDhQkw56Q+z3Nrrx2LtOmO1AveoqJIyXxVL5VepNjJFhkST68YDEYmW/UF4NEr28+0QC7RYWdObfw",
+	"On4x6Pd+Gn5T61y6PffHGBWiLJdBbpo2I+z2hCrRCIs/zQW4+aRtrlAXc7/12uiyMxh87pOffXDC6cr6",
+	"8cnN6q3CsqhVH8Y1HC+T1oWydDTA4J1S9hxg0dZt/VcxOFJw0cPif93WLQyik33JoikanAudKjnxHB4H",
+	"WDxr9SuDBx6O2tNzEAprGDFOvi8/NIeskueFl53eof6eawEaSMGjrNb1tC4gRw553du/ttXHrc5yfQQA",
+	"AP//Vtb2iX0CAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
@@ -381,3 +381,4 @@ func GetSwagger() (*openapi3.Swagger, error) {
 	}
 	return swagger, nil
 }
+

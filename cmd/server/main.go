@@ -19,7 +19,7 @@ import (
 type SpecServer struct {
 }
 
-func (m *SpecServer) Get(ctx echo.Context) error {
+func (m *SpecServer) Post(ctx echo.Context) error {
 	r := ctx.Request()
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	prettyJson, _ := prettyprint(reqBody)

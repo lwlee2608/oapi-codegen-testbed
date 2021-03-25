@@ -18,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	requestBody := Spec.GetJSONRequestBody{
+	requestBody := Spec.PostJSONRequestBody{
 		BaseObject: Spec.BaseObject{
 			Foo:        String("fooValue"),
 			DollarSign: "ObjectType",
@@ -28,7 +28,7 @@ func main() {
 		},
 	}
 
-	_, err = client.Get(context.Background(), requestBody)
+	_, err = client.Post(context.Background(), requestBody)
 	if err != nil {
 		log.Fatal(err)
 	}
