@@ -18,18 +18,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	requestBody := Spec.RequestObject{
-		FooObject: Spec.FooObject{
-			Foo: String("fooValue"),
-			// ObjType: "FooObject",
+	requestBody := Spec.GetJSONRequestBody{
+		BaseObject: Spec.BaseObject{
+			Foo:     String("fooValue"),
+			ObjType: "BarOject",
 		},
-		BarObject: Spec.BarObject{
+		ChildObject: Spec.ChildObject{
 			Bar: String("barValue"),
-			// ObjType: "BarOject",
 		},
 	}
 
-	_, err = client.Get(context.Background(), Spec.GetJSONRequestBody(requestBody))
+	_, err = client.Get(context.Background(), requestBody)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -27,7 +27,7 @@ func (m *SpecServer) Get(ctx echo.Context) error {
 
 	request := Spec.RequestObject{}
 	json.Unmarshal(reqBody, &request)
-	log.Tracef("request object %s", render.AsCode(request))
+	log.Infof("request object %s", render.AsCode(request))
 
 	return ctx.String(http.StatusOK, "")
 }

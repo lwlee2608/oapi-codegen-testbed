@@ -14,17 +14,15 @@ paths:
       responses:
         '200':
           description: desc
-
 components:
   schemas:
     requestObject:
       allOf:
-        - $ref: '#/components/schemas/fooObject'
-        - $ref: '#/components/schemas/barObject'
+        - $ref: '#/components/schemas/baseObject'
+        - $ref: '#/components/schemas/childObject'
       discriminator:
         propertyName: objType
-
-    fooObject:
+    baseObject:
       type: object
       required:
         - objType
@@ -33,14 +31,8 @@ components:
           type: string
         foo:
           type: string
-         
-
-    barObject:
+    childObject:
       type: object
-      required:
-        - objType
       properties:
-        objType:
-          type: string
         bar:
           type: string

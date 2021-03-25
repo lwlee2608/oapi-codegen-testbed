@@ -20,24 +20,23 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// BarObject defines model for barObject.
-type BarObject struct {
-	Bar     *string `json:"bar,omitempty"`
-	ObjType string  `json:"objType"`
-}
-
-// FooObject defines model for fooObject.
-type FooObject struct {
+// BaseObject defines model for baseObject.
+type BaseObject struct {
 	Foo     *string `json:"foo,omitempty"`
 	ObjType string  `json:"objType"`
 }
 
+// ChildObject defines model for childObject.
+type ChildObject struct {
+	Bar *string `json:"bar,omitempty"`
+}
+
 // RequestObject defines model for requestObject.
 type RequestObject struct {
-	// Embedded struct due to allOf(#/components/schemas/fooObject)
-	FooObject `yaml:",inline"`
-	// Embedded struct due to allOf(#/components/schemas/barObject)
-	BarObject `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/baseObject)
+	BaseObject `yaml:",inline"`
+	// Embedded struct due to allOf(#/components/schemas/childObject)
+	ChildObject `yaml:",inline"`
 }
 
 // GetJSONBody defines parameters for Get.
@@ -351,12 +350,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/7SSMU/DMBSE/8vBaCUBNo8siIUubFUHJ3lpXSV+xn4gVZX/O7LTNiCgGxliO++ku/uc",
-	"IzqePDtyEqGPiN2OJlO2rQmrdk+d5IMP7CmIpfMoL3LwBI0owbotkgK3+9fy7ccsKQR6e7eBeuj1RbhR",
-	"ZyHPVklhYP7Ld2D+P9+soyiLtxnH1QC9PuI20ACNm3qBVZ9I1UvcpK4rF6Bpo9Db2AU7WWeEw5eqhxcz",
-	"nYKVqCnlEtYNc3UrY54KRWmph8IHhWjZQaOpmuqu4PDkjLfQeKiaqoGCN7IrBOv82lLpl+2MWHbPPTSe",
-	"SHCB8Mj9IUs6dkJupuH9aLuir/cxG57/lry71vs72FKnp1zeyxw8n+YbiJ5dnO/6vmny8puyPJ8BAAD/",
-	"/+w+3S+6AgAA",
+	"H4sIAAAAAAAC/3xSPU/DMBD9Lw9GKwmweWRBLHRhqzo49qV1ldjGPpCqyv8d2ekXammG2Jd7uvdx2UP7",
+	"KXhHjhPkHklvaFL12qtEi35LmksVog8U2VLtDd6Xg3eBIJE4WrdGFvD99rN+u+plgUhf3zaSgVyegCtx",
+	"BPqZKgvojR3Nf8y9irenX40pdJT4PEiN42KAXO7xGGmAxEN7Nt8enLcXtrO4D70UmlcCxiYd7WSdYh8v",
+	"pO8+1HTQVk3nXARbN8whWh5LlylxTwYCPxST9Q4SXdM1TzXYQE4FC4mXpms6CATFm5pIW15rqhYLnWLr",
+	"3buBxBsxTjm8erMrEO0dk5sDCWG0uuLbbSqExx+g3O45/5tttWOomA88Cy/VvIQUvEvz7p67rhy3kPX5",
+	"DQAA//8TR8ySjQIAAA==",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code
