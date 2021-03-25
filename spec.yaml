@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: testbed
+  version: 0.0.1
+paths:
+  /:
+    get:
+      requestBody:
+        description: desc
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestObject'
+      responses:
+        '200':
+          description: desc
+
+components:
+  schemas:
+    requestObject:
+      allOf:
+        - $ref: '#/components/schemas/fooObject'
+        - $ref: '#/components/schemas/barObject'
+      discriminator:
+        propertyName: objType
+
+    fooObject:
+      type: object
+      required:
+        - objType
+      properties:
+        objType:
+          type: string
+        foo:
+          type: string
+         
+
+    barObject:
+      type: object
+      required:
+        - objType
+      properties:
+        objType:
+          type: string
+        bar:
+          type: string
